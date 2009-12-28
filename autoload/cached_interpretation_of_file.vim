@@ -1,4 +1,5 @@
-exec scriptmanager#DefineAndBind('s:cache_dir','g:cache_dir',expand('$HOME').'/.vim-cache')
+exec scriptmanager#DefineAndBind('s:c','g:cache_dir_options','{}')
+let s:c['cache_dir'] = get(s:c, 'cache_dir', expand('$HOME').'/.vim-cache')
 
 "TODO add command to clear cache.. because it will grow and grow.
 
@@ -20,7 +21,7 @@ function! cached_interpretation_of_file#ScanIfNewer(file, opts)
   let dict = config#GetG(path, {'set': 1, 'default' : {}})
 
   if cache
-    let this_dir = s:cache_dir.'/scan-and-cache'
+    let this_dir = s:c['cache_dir'].'/scan-and-cache'
     let cache_file = expand(this_dir.'/'.substitute(string([Func, a:file]),'[[\]{}:/\,''"# ]\+','_','g'))
     if !has_key(dict, a:file) " try getting from file cache
       if filereadable(cache_file)
