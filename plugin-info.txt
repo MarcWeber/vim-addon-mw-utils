@@ -1,9 +1,11 @@
 {
-  'name' : 'vim-plugin-cached-interpretation-of-file',
+  'name' : 'vim-plugin-mw-utils',
   'version' : "0.0",
   'author' : "Marc Weber <marco-oweber@gmx.de>",
   'maintainer' : "Marc Weber <marco-oweber@gmx.de>",
   'repository' : {'type': 'git', 'url': 'git://github.com/MarcWeber/vim-plugin-manager-known-repositories.git'},
-  'dependencies' : {},
-  'description' : 'read a file interpreted by a vim function. Return cached results if file exists. Cached contents can be written to a file'
+  'dependencies' : {
+    'vim-plugin-funcref' : {}
+  },
+  'description' : 'various utils such as caching interpreted contents of files or advanced glob like things'
 }

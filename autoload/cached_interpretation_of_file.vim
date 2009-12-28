@@ -45,9 +45,9 @@ function! cached_interpretation_of_file#ScanIfNewer(file, opts)
         throw "ScanIfNewer: Could'n read file ".a:file." error: ".tovl#log#FormatException()
       endif
     endtry
-    let scan_result = library#Call(Func, [contents])
+    let scan_result = funcref#Call(Func, [contents])
   else
-    let scan_result = library#Call(Func, [a:file])
+    let scan_result = funcref#Call(Func, [a:file])
   endif
   let  dict[a:file] = {"ftime": getftime(a:file), "scan_result": scan_result }
   if cache
