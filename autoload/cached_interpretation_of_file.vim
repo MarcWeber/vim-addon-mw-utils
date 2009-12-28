@@ -3,7 +3,7 @@ exec scriptmanager#DefineAndBind('s:cache_dir','g:cache_dir',expand('$HOME').'/.
 "TODO add command to clear cache.. because it will grow and grow.
 
 " opts: scan_func: This function will be applied before returning contents
-"       use_cache : write the result to a file (default no)
+"       fileCache : write the result to a file (default no)
 "       asLines   : if set then read the file and feed file contents into
 "                   functions. If not set pass the filename (Maybe you want to
 "                   use and external application to process the file)
