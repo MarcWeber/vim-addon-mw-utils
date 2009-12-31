@@ -4,7 +4,7 @@
 
 " vim requires that the function has already been loaded
 " That's why I'm using a faked function reference type here
-" library#Function("Foo", { 'args' : [2, "foo"], 'self' : dict}) will create a closure. args
+" funcref#Function("Foo", { 'args' : [2, "foo"], 'self' : dict}) will create a closure. args
 " these args + args passed to Call will be the list of args passed to call()
 " optional self can be the "object".
 function! funcref#Function(name,...)
@@ -45,7 +45,7 @@ function! funcref#Call(...)
               \ || Fun[:len('debug ')-1] == 'debug ')
       " it doesn't make sense to list all vim commands here
       " So if you want to execute another action consider using 
-      " library#Function('exec  '.string('aw')) or such
+      " funcref#Function('exec  '.string('aw')) or such
 
       " function is a String, call exec
       let ARGS = args[1]
