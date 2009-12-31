@@ -20,7 +20,6 @@ endfunction
 "   funcref#Call({'faked_function_reference':'return ARGS[0]'})
 " more documentation will be added later
 function! funcref#Call(...)
-  let t = library#Type(a:1)
   let args = copy(a:000)
   if (len(args) < 2)
     call add(args, [])
@@ -30,10 +29,10 @@ function! funcref#Call(...)
   if (len(args) < 3)
     call add(args, {})
   endif
-  if t == 2
+  if type(a:1) == 2
     " funcref: function must have been laoded
     return call(function('call'), args)
-  elseif t == 4434
+  elseif has_key(a:1, 'faked_function_reference')
     let Fun = args[0]['faked_function_reference']
     if type(Fun) == type('')
         \ && (Fun[:len('return ')-1] == 'return ' 

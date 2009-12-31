@@ -1,5 +1,6 @@
 exec scriptmanager#DefineAndBind('s:c','g:cache_dir_options','{}')
 let s:c['cache_dir'] = get(s:c, 'cache_dir', expand('$HOME').'/.vim-cache')
+let s:c['scanned_files'] = get(s:c, 'scanned_files', {})
 
 "TODO add command to clear cache.. because it will grow and grow.
 
@@ -16,9 +17,8 @@ function! cached_interpretation_of_file#ScanIfNewer(file, opts)
   let Func = get(a:opts, 'scan_func', funcref#Function('return ARGS[0]'))
   let asLines = get(a:opts, 'asLines', 1)
   let func_as_string = string(Func)
-  let path = ['scanned_files',func_as_string]
   
-  let dict = config#GetG(path, {'set': 1, 'default' : {}})
+  let dict = s:c['scanned_files']
 
   if cache
     let this_dir = s:c['cache_dir'].'/scan-and-cache'
