@@ -57,3 +57,8 @@ function! cached_interpretation_of_file#ScanIfNewer(file, opts)
   endif
   return scan_result
 endfunction
+
+fun! cached_interpretation_of_file#ClearScanCache()
+  exec "!rm -fr ".shellescape(s:c['cache_dir'])."/*"
+  let s:c['scanned_files'] = {}
+endf
