@@ -24,7 +24,7 @@ let s:c['use_file_cache'] = get(s:c, 'use_file_cache', 1)
 "       }
 "
 " default: what to return if file doesn't exist
-function! tlib#cached_file_contents#CachedFileContents(file, func, ...)
+function! cached_file_contents#CachedFileContents(file, func, ...)
   let default = a:0 > 0 ? a:1 : funcref#Function("throw ".string('file '.a:file.' does not exist'))
   let use_file_cache = get(a:func, 'use_file_cache', 0) && s:c['use_file_cache']
   let file = expand(a:file) " simple kind of normalization. necessary when using file caching
@@ -75,7 +75,7 @@ function! tlib#cached_file_contents#CachedFileContents(file, func, ...)
   return scan_result
 endfunction
 
-fun! tlib#cached_file_contents#ClearScanCache()
+fun! cached_file_contents#ClearScanCache()
   let s:c['scanned_files'] = {}
 
   " Don't run rm -fr. Ask user to run it. It cache_dir may have been set to
@@ -83,7 +83,7 @@ fun! tlib#cached_file_contents#ClearScanCache()
   echoe "run manually in your shell:  rm -fr ".shellescape(s:c['cache_dir'])."/*"
 endf
 
-fun! tlib#cached_file_contents#Test()
+fun! cached_file_contents#Test()
 
   " usually you use a global option so that the function can be reused
   let my_interpreting_func  = {'func' : funcref#Function('return len(ARGS[0])'), 'version': 2, 'use_file_cache':1, 'asLines':1}
@@ -92,8 +92,8 @@ fun! tlib#cached_file_contents#Test()
   let tmp = tempname()
   call writefile(['some text','2nd line'], tmp)
 
-  let r = [ tlib#cached_file_contents#CachedFileContents(tmp, my_interpreting_func)
-        \ , tlib#cached_file_contents#CachedFileContents(tmp, my_interpreting_func2) ]
+  let r = [ cached_file_contents#CachedFileContents(tmp, my_interpreting_func)
+        \ , cached_file_contents#CachedFileContents(tmp, my_interpreting_func2) ]
    if r != [2, tmp]
     throw "test failed 1, got ".string(r)
   endif
@@ -104,7 +104,7 @@ fun! tlib#cached_file_contents#Test()
   " now let's change contents
   call writefile(['some text','2nd line','3rd line'], tmp)
 
-  let r = tlib#cached_file_contents#CachedFileContents(tmp, my_interpreting_func)
+  let r = cached_file_contents#CachedFileContents(tmp, my_interpreting_func)
   if 3 != r
     throw "test failed 2, got ".string(r)
   endif
