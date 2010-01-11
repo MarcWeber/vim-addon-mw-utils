@@ -5,8 +5,8 @@
 -----------------------------------------------------------------------
 HOWTO~
 
-Use *tlib#funcref#Function* to create a special dict called
-*faked-function-reference* which can be called by *tlib#funcref#Call*
+Use *funcref#Function* to create a special dict called
+*faked-function-reference* which can be called by *funcref#Call*
 >
     { 'faked_function_reference': 'file#FuncName' }
 <   passing some arguments and / or self: >
@@ -26,10 +26,10 @@ REASONS ~
 
 Example: ~
 >
-  let f = tlib#funcref#Function('return ARGS[0].ARGS[1].SELF["key"]',{'args':[3], 'self':{'key': 'value'} })
-  echo tlib#funcref#Call(f, [2])
+  let f = funcref#Function('return ARGS[0].ARGS[1].SELF["key"]',{'args':[3], 'self':{'key': 'value'} })
+  echo funcref#Call(f, [2])
   " prints  "32value"
 
-  echo tlib#funcref#Call('no value')
+  echo funcref#Call('no value')
 < 
-  echo tlib#funcref#Call(f, [2])
+  echo funcref#Call(f, [2])
