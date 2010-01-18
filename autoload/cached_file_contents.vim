@@ -8,8 +8,10 @@ if !exists('g:cache_dir_options') | let g:cache_dir_options = {} | endif | let s
 
 let s:c['cache_dir'] = get(s:c, 'cache_dir', expand('$HOME').'/.vim-cache')
 let s:c['scanned_files'] = get(s:c, 'scanned_files', {})
-let s:c['use_file_cache'] = get(s:c, 'use_file_cache', 1)
+let s:scanned_files = s:c['scanned_files']
 
+
+let s:define_cache_file = "let this_dir = s:c['cache_dir'].'/cached-file-conents' | let cache_file = expand(this_dir.'/'.substitute(string([func_as_string, a:file]),'[[\\]{}:/\\,''\"# ]\\+','_','g'))"
 
 " read a file, run function to extract contents and cache the result returned
 " by that function in memory. Optionally the result can be cached on disk as
@@ -18,57 +20,46 @@ let s:c['use_file_cache'] = get(s:c, 'use_file_cache', 1)
 " file     : the file to be read
 " func: { 'func': function which will be called by funcref#Call
 "       , 'version' : if this version changes cache will be invalidate automatically
-"       , 'asLines' : optional, default 1.  If set to 0 the filename will be passed insead of the file contents
-"       , 'use_file_cache': optional, default 0. If set to 1 the result will be written to a cache file
-"       , 'binary': optional, default ''. Can be set to 'b' See :h readfile
+"       , 'ftime_check': optional, default 1. if set to 0 cache isn't updated when file changes and file is in cache
 "       }
 "
 " default: what to return if file doesn't exist
+" think twice about adding lines. This function is called many times.
 function! cached_file_contents#CachedFileContents(file, func, ...)
-  let default = a:0 > 0 ? a:1 : funcref#Function("throw ".string('file '.a:file.' does not exist'))
-  let use_file_cache = get(a:func, 'use_file_cache', 0) && s:c['use_file_cache']
-  let file = expand(a:file) " simple kind of normalization. necessary when using file caching
-  let Func = get(a:func, 'func', funcref#Function('return ARGS[0]'))
-  let asLines = get(a:func, 'asLines', 1)
-  let binary = get(a:func, 'binary', '')
-  let func_as_string = string(Func)
-  let v = get(a:func, 'version', 0)
+  let ignore_ftime = a:0 > 0 ? a:1 : 0
+  " using string for default so that is evaluated when needed only
+  let use_file_cache = get(a:func, 'use_file_cache', 0)
 
-  let useCached = 1
-  
-  let dict = s:c['scanned_files']
+  " simple kind of normalization. necessary when using file caching
+  " this seems to be slower:
+  " let file = fnamemodify(a:file, ':p') " simple kind of normalization. necessary when using file caching
+  " / = assume its an absolute path
+  " let file = a:file[0] == '/' ? a:file : expand(a:file, ':p')
+  let file = a:file[0] == '/' ? a:file : fnamemodify(a:file, ':p') " simple kind of normalization. necessary when using file caching
+  let func_as_string = string(a:func['func'])
 
-  if (!has_key(dict, func_as_string))
-    let dict[func_as_string] = {}
+  if (!has_key(s:scanned_files, func_as_string))
+    let s:scanned_files[func_as_string] = {}
   endif
-
-  let dict = dict[func_as_string]
-
-  if !filereadable(a:file)
-    return funcref#Call(default)
-  endif
-
-  if use_file_cache
-    let this_dir = s:c['cache_dir'].'/cached-file-conents'
-    " I'd like to use a hash function. Does Vim has one?
-    let cache_file = expand(this_dir.'/'.substitute(string([func_as_string, a:file]),'[[\]{}:/\,''"# ]\+','_','g'))
-    if !has_key(dict, a:file) " try getting from file cache
-      if filereadable(cache_file)
-        let dict[file] = eval(readfile(cache_file,'b')[0])
-      endif
+  let dict = s:scanned_files[func_as_string]
+  if use_file_cache && !has_key(dict, a:file)
+    exec s:define_cache_file
+    if filereadable(cache_file)
+      let dict[file] = eval(readfile(cache_file,'b')[0])
     endif
   endif
   if has_key(dict, a:file)
-    if useCached
-          \ && getftime(a:file) <= dict[a:file]['ftime']
-          \ && dict[a:file]['version'] == v
+    let d = dict[a:file]
+    if use_file_cache
+          \ && (ignore_ftime || getftime(a:file) <= d['ftime'])
+          \ && d['version'] == a:func['version']
       return dict[a:file]['scan_result']
     endif
   endif
-  let Func = a:func['func']
-  let scan_result = funcref#Call(Func, [ asLines ? readfile(a:file, binary) : a:file ] )
-  let  dict[a:file] = {"ftime": getftime(a:file), 'version': v, "scan_result": scan_result }
+  let scan_result = funcref#Call(a:func['func'], [a:file] )
+  let  dict[a:file] = {"ftime": getftime(a:file), 'version': a:func['version'], "scan_result": scan_result }
   if use_file_cache
+    if !exists('cache_file') | exec s:define_cache_file | endif
     if !isdirectory(this_dir) | call mkdir(this_dir,'p',0700) | endif
     call writefile([string(dict[a:file])], cache_file)
   endif
