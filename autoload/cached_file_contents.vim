@@ -77,8 +77,8 @@ endf
 fun! cached_file_contents#Test()
 
   " usually you use a global option so that the function can be reused
-  let my_interpreting_func  = {'func' : funcref#Function('return len(ARGS[0])'), 'version': 2, 'use_file_cache':1, 'asLines':1}
-  let my_interpreting_func2 = {'func' : funcref#Function('return ARGS[0]')     , 'version': 2, 'use_file_cache':1, 'asLines':0}
+  let my_interpreting_func  = {'func' : funcref#Function('return len(readfile(ARGS[0]))'), 'version': 2, 'use_file_cache':1}
+  let my_interpreting_func2 = {'func' : funcref#Function('return ARGS[0]')               , 'version': 2, 'use_file_cache':1}
 
   let tmp = tempname()
   call writefile(['some text','2nd line'], tmp)
