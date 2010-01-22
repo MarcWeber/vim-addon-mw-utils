@@ -1,0 +1,11 @@
+*tiny-cmd*  make long commands short so that they hopefully no longer trigger "press Enter .. [ok]"
+                    Author: Marc Weber, marco-oweber@gmx.de
+
+-----------------------------------------------------------------------
+HOWTO~
+
+Example usage: >
+  let nr = tiny_cmd#Put('call MyFunc("long    string")|....')
+  map <F2> :exec 'tiny_cmd#Get('.nr.')'<cr>
+< 
+  Use Pop instead of Get if the command is used once only
