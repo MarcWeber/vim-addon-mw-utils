@@ -4,8 +4,15 @@
 -----------------------------------------------------------------------
 HOWTO~
 
+Problem: >
+  exec 'map <F2> :silent! let g:g="'.repeat('foobar ',200).'"<cr>'
+Now run the mapping by pressing <F2> and you notice what I'm talking about
+
+Solution (Example):
+
+
 Example usage: >
-  let nr = tiny_cmd#Put('call MyFunc("long    string")|....')
-  map <F2> :exec 'tiny_cmd#Get('.nr.')'<cr>
+  let nr = tiny_cmd#Put('let g:g="'.repeat('foobar ',200).'"')
+  exec 'map <F2> :exec tiny_cmd#Get('.nr.')<cr>'
 < 
-  Use Pop instead of Get if the command is used once only
+Use Pop instead of Get if you use this command once only
