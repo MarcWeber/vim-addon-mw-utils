@@ -1,4 +1,4 @@
-exec scriptmanager#DefineAndBind('s:c','g:glob_like', '{}')
+exec vam#DefineAndBind('s:c','g:glob_like', '{}')
 
 " ignore vcs stuff, Don't think you want those..
 let s:c['regex_ignore_directory'] = '\<\%([_.]darcs\|\.git\|.svn\|.hg\|.cvs\|.bzr\)\>'

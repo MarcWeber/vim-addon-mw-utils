@@ -1,6 +1,6 @@
 " vim suffers:
 
-exec scriptmanager#DefineAndBind('s:c','g:vim_tiny_cmd', '{}')
+exec vam#DefineAndBind('s:c','g:vim_tiny_cmd', '{}')
 
 fun! tiny_cmd#Put(a)
   let new = get(s:c,'next',0) +1

@@ -3,7 +3,7 @@
 " @Last Change: 2010-01-03.
 " @Revision:    0.3.0
 
-"exec scriptmanager#DefineAndBind('s:c','g:cache_dir_options','{}')
+"exec vam#DefineAndBind('s:c','g:cache_dir_options','{}')
 if !exists('g:cache_dir_options') | let g:cache_dir_options = {} | endif | let s:c = g:cache_dir_options 
 
 let s:c['cache_dir'] = get(s:c, 'cache_dir', expand('$HOME').'/.vim-cache')
