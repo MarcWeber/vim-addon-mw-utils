@@ -25,7 +25,7 @@ let s:define_cache_file = "let this_dir = s:c['cache_dir'].'/cached-file-conents
 "
 " default: what to return if file doesn't exist
 " think twice about adding lines. This function is called many times.
-function! cached_file_contents#CachedFileContents(file, func, ...)
+function! cached_file_contents#CachedFileContents(file, func, ...) abort
   let ignore_ftime = a:0 > 0 ? a:1 : 0
   " using string for default so that is evaluated when needed only
   let use_file_cache = get(a:func, 'use_file_cache', 0)

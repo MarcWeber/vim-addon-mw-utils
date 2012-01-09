@@ -16,7 +16,7 @@ Use *funcref#Function* to create a special dict called
 
 REASONS ~
   Creating a Vim funcref pointing to an autoload function will make Vim source
-  that file. This is not lazy enough.
+  that file. This is not lazy enough. (Seems to be no longer true? Has this changed?)
 
   A Vim function reference neither allows attaching arguments nor self.
 
