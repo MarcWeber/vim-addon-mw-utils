@@ -7,8 +7,8 @@
 " returns: The command which was used to switch to the buffer
 fun! buf_utils#GotoBuf(buf_identifier, opts)
   let buf_nr = bufnr(a:buf_identifier)
-  if buf_nr == -1 && get(a:opts, 'create', 0)
-    exec 'e '.fnameescape(a:buf_identifier)
+  if buf_nr == -1 && ( get(a:opts, 'create', 0) || has_key(a:opts, 'create_cmd'))
+    exec get(a:opts,'create_cmd','e').' '.fnameescape(a:buf_identifier)
     return "e"
   else
     let win_nr = bufwinnr(buf_nr)
@@ -16,7 +16,7 @@ fun! buf_utils#GotoBuf(buf_identifier, opts)
       exec 'b '.buf_nr
       return "b"
     else
-      exec 'wincmd '.win_nr
+      exec win_nr.'wincmd w'
       return "w"
     endif
     wincmd w"
