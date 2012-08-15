@@ -11,7 +11,7 @@ let s:c['scanned_files'] = get(s:c, 'scanned_files', {})
 let s:scanned_files = s:c['scanned_files']
 
 
-let s:define_cache_file = "let this_dir = s:c['cache_dir'].'/cached-file-conents' | let cache_file = expand(this_dir.'/'.substitute(string([func_as_string, a:file]),'[[\\]{}:/\\,''\"# ]\\+','_','g'))"
+let s:define_cache_file = "let this_dir = s:c['cache_dir'].'/cached-file-contents' | let cache_file = expand(this_dir.'/'.substitute(string([func_as_string, a:file]),'[[\\]{}:/\\,''\"# ]\\+','_','g'))"
 
 " read a file, run function to extract contents and cache the result returned
 " by that function in memory. Optionally the result can be cached on disk as
