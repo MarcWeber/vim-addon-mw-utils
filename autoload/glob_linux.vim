@@ -1,13 +1,20 @@
 
 " TODO refactor: create glob function
-" noremap \og :call<space>glob_linux#FileByGlobCurrentDir('**/*'.input('glob open '),"\\.git\\<bar>\\.hg\\<bar>node_modules" )<cr>
+" noremap \og :call<space>glob_linux#FileByGlobCurrentDir('**/*'.input('glob open '),"\\.git\\<bar>\\.hg\\<bar>node_modules\\<bar>\\.pyc" )<cr>
+" noremap \og :call<space>glob_linux#FileByGlobCurrentDir('**/*'.input('glob open '),"default" )<cr>
 function! glob_linux#FileByGlobCurrentDir(glob, exclude_pattern)
+  if a:exclude_pattern == "default"
+    let exclude_pattern = '\.git\|\.hg\|node_modules\|\.pyc'
+  else
+    let exclude_pattern = a:exclude_pattern
+  endif
+
   " let files = split(glob(a:glob),"\n")
   let g = a:glob
   let replace = {'**': '.*','*': '[^/\]*','.': '\.'}
   let g = substitute(g, '\(\*\*\|\*\|\.\)', '\='.string(replace).'[submatch(1)]','g')
 
-  let exclude = a:exclude_pattern == ''? '' : ' | grep -v -e '.shellescape(a:exclude_pattern)
+  let exclude = exclude_pattern == '' ? '' : ' | grep -v -e '.shellescape(exclude_pattern)
 
   let cmd = 'find | grep -e '.shellescape(g).exclude
   let files = split(system(cmd),"\n")
